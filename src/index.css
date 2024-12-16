@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(#1A2980, #26D0CE);
+    color: white;
+}
+.container {
+    max-width: 410px;
+    background: linear-gradient(#72c22c, #0b4930);
+}
+.hourly-forecast .weather-list {
+    display: flex;
+}
+.hourly-forecast .weather-item .weather-icon {
+    width: 28px;
+    aspect-ratio: 1;
+
+}
