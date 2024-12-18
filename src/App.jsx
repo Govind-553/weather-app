@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SearchSection from "./components/SearchSection";
 import CurrentWeather from "./components/CurrentWeather";
 import HourlyWeather from "./components/HourlyWeather";
+import NoResultsDiv from './components/NoResultsDiv';
 import { weatherCodes } from './constants';
-import { use } from 'react';
 
 const App = () => {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   
   const [currentWeather, setCurrentWeather] = useState({});
   const [hourlyForecasts, setHourlyForecasts] = useState([]);
+  const [hasNoResults, setHasNoResults] = useState(false);
+  const searchInputRef = useRef(null);
 
   const filterHourlyForecast = (hourlyData) => {
     const currentHour = new Date().setMinutes(0, 0, 0);
@@ -23,8 +26,12 @@ const App = () => {
   }
   // fetches weather details from API url 
   const getWeatherDetails = async (API_URL) => {
+    setHasNoResults(false);
+      window.innerWidth <= 768 && searchInputRef.current.focus();
+
     try {
       const response = await fetch(API_URL);
+      if(!response.ok) throw new Error('Failed to fetch data');
       const data = await response.json();
 
       // Extract the current weather details
@@ -37,18 +44,30 @@ const App = () => {
 
       // combines hourly data for both the forecast days
       const combinedHourlyData = [...data.forecast.forecastday[0].hour, ...data.forecast.forecastday[1].hour]
+
+      searchInputRef.current.value = data.location.name;
       filterHourlyForecast(combinedHourlyData);// updates state with weather details
-    } catch (error) {
-      console.log("Error fetching weather data");
+    } catch {
+      // set setHasNoResults if there's an error
+      setHasNoResults(true);
     }
   };
 
+ // fetches default city weather details on initial rendering
+  useEffect(() => {
+    const defaultCity = "Mumbai";
+    const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${defaultCity}&days=2`;
+    getWeatherDetails(API_URL);
+  }, []);
+
   return <div className="container">
     {/* Search section */}
-    <SearchSection getWeatherDetails={getWeatherDetails} />
+    <SearchSection getWeatherDetails={getWeatherDetails} searchInputRef={searchInputRef} />
 
-    {/* Weather section */}
-    <div className="weather-section">
+    {hasNoResults ? (
+      <NoResultsDiv />
+    ) : (
+        <div className="weather-section">
      
       <CurrentWeather currentWeather={currentWeather} />
   
@@ -56,11 +75,14 @@ const App = () => {
       <div className="hourly-forecast">
         <ul className="weather-list">
           {hourlyForecasts.map((hourlyWeather) => (
-            <HourlyWeather key={hourlyWeather.time_epoch} />
-          ))};        
+            <HourlyWeather key={hourlyWeather.time_epoch} hourlyWeather={hourlyWeather} />
+          ))}       
         </ul>
       </div>
     </div>
+    )
+  }
+    
   </div>;
 };
 
