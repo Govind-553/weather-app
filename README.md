@@ -13,7 +13,7 @@ Whether you're planning a sunny outing ☀️ or bracing for a storm 🌩️, we
 - **Vite**: A fast and modern build tool for development! ⚡
 - **API Integration**: Fetching real-time data from reliable weather APIs! 🌐
 
-## Getting Started 🏁
+## Getting Started 📦
 1. Clone the repository: `git clone https://github.com/yourusername/weather-app.git`
 2. Navigate to the project directory: `cd weather-app`
 3. Install dependencies: `npm install`
