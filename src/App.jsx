@@ -4,9 +4,9 @@ import CurrentWeather from "./components/CurrentWeather";
 import HourlyWeather from "./components/HourlyWeather";
 import NoResultsDiv from './components/NoResultsDiv';
 import { weatherCodes } from './constants';
-const API_KEY = import.meta.env.VITE_API_KEY;
 
 const App = () => {
+  const API_KEY = import.meta.env.VITE_API_KEY;
   
   const [currentWeather, setCurrentWeather] = useState({});
   const [hourlyForecasts, setHourlyForecasts] = useState([]);
